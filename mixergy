@@ -1,0 +1,11 @@
+for i in `seq 1 62`; do curl -L -b /Users/blake/Downloads/cookies.txt http://mixergy.com/interviews/page/$i | grep "<h2" | awk -F "a href=" '{print $2}' >> interviews; sleep 1; done
+
+awk '{ gsub(/\"/, ""); print $1}' interviews > interviews_without_quotes
+
+for i in `cat interviews_without_quotes`; do curl -L -b /Users/blake/Downloads/cookies.txt $i | grep mp3 | awk -F "a href=" '{print $2}' >> unparsed_mp3_urls; sleep 1; done
+
+
+
+awk '{gsub(/\">.*/,"");  gsub(/\"/,"");print $1;}' unparsed_mp3_urls > parsed_mp3_urls
+
+for i in `cat parsed_mp3_urls`; do sleep 1; wget $i; done
